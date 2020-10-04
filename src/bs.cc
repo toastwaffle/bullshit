@@ -1,5 +1,9 @@
+#include "bs.pb.h"
+
 #include <iostream>
 
 int main() {
-  std::cout << "Hello, World!\n";
+  bs::demo demo;
+  demo.set_text("Hello, World!\n");
+  std::cout << demo.DebugString();
 }

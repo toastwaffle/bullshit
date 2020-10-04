@@ -1,4 +1,4 @@
-CXXFLAGS += -Wall -Wextra -Isrc -Igen
+CXXFLAGS += -Wall -Wextra -Isrc -Ibuild/proto
 
 .PHONY: default
 default: all
@@ -29,15 +29,12 @@ bin/%:
 	@mkdir -p $(dir $@)
 	@${CXX} ${LDFLAGS} $^ -o $@ ${LDLIBS}
 
-# Pattern rule for generated files.
-.PRECIOUS: build/gen/%.cc build/gen/%.h
-build/gen/%.cc build/gen/%.h &: src/gen_%.sh src/%.txt
+# Pattern rule for proto files.
+.PRECIOUS: build/proto/%.cc build/proto/%.h
+build/proto/%.pb.cc build/proto/%.pb.h &: src/%.proto
 	@echo Generating $*
-	@mkdir -p build/gen/$(dir $*)
-	@$^
-
-GENERATORS = $(shell find src -name 'gen_*.sh')
-GENERATED = $(patsubst src/gen_%.sh, gen/%.h, ${GENERATORS})
+	@mkdir -p build/proto/$(dir $*)
+	@protoc --proto_path=src --cpp_out=build/proto/$(dir $*) $^
 
 # Pattern rule for compiling a cc file into an o file.
 build/%.o: src/%.cc $(wildcard src/%.h) | ${GENERATED}
@@ -46,7 +43,7 @@ build/%.o: src/%.cc $(wildcard src/%.h) | ${GENERATED}
 	@${CXX} ${CXXFLAGS} ${CPPFLAGS} -MMD -MF build/dep/$*.d $< -c -o build/$*.o
 
 # Pattern rule for compiling a generated cc file into an o file.
-build/%.o: gen/%.cc $(wildcard gen/%.h)
+build/%.o: build/proto/%.cc | build/proto/%.h
 	@echo Compiling $*
 	@mkdir -p {build,build/dep}/$(dir $*)
 	@${CXX} ${CXXFLAGS} ${CPPFLAGS} -MMD -MF build/dep/$*.d $< -c -o build/$*.o

@@ -8,6 +8,7 @@ BINARIES =  \
 all: $(patsubst %, bin/%, ${BINARIES})
 
 BS_DEPS =  \
+	bs.pb  \
 	bs
 bin/bs: $(patsubst %, build/%.o, ${BS_DEPS})
 
