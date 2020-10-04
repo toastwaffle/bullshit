@@ -1,4 +1,6 @@
 #include "bs.pb.h"
+#include "commands/init.h"
+#include "commands/status.h"
 
 #include <filesystem>
 #include <iomanip>
@@ -47,18 +49,6 @@ void ReadOptions(int& argc, char**& argv) {
   argv[argc] = nullptr;
 }
 
-fs::path RepositoryRoot() {
-  fs::path path = fs::current_path();
-  while (true) {
-    if (fs::exists(path / ".bs")) return path;
-    if (path == path.parent_path()) {
-      std::cerr << "Not inside a repository.\n";
-      std::exit(1);
-    }
-    path = path.parent_path();
-  }
-}
-
 }  // namespace
 
 int main(int argc, char* argv[]) {
@@ -69,17 +59,9 @@ int main(int argc, char* argv[]) {
   }
   const std::string_view command = argv[1];
   if (command == "init") {
-    if (fs::exists(".bs")) {
-      std::cerr << "Cannot initialise new repository: .bs already exists.\n";
-      return EXIT_FAILURE;
-    }
-    if (!fs::create_directory(".bs")) {
-      std::cerr << "Failed to create .bs directory.\n";
-      return EXIT_FAILURE;
-    }
+    return bs::commands::Init();
   } else if (command == "status") {
-    fs::path root = RepositoryRoot();
-    std::cout << "Inside repository rooted at " << root << ".\n";
+    return bs::commands::Status();
   } else {
     std::cerr << "Unrecognised command " << std::quoted(command) << ".\n";
     return EXIT_FAILURE;
