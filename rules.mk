@@ -1,5 +1,7 @@
 CXXFLAGS += -Wall -Wextra -Isrc -Ibuild/proto
 
+.PRECIOUS: build/proto/%.pb.cc
+
 .PHONY: default
 default: all
 
