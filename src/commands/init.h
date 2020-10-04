@@ -1,7 +1,5 @@
-#ifndef _BULLSHIT_SRC_COMMANDS_INIT_H
-#define _BULLSHIT_SRC_COMMANDS_INIT_H
-
-namespace bs {
+#ifndef BULLSHIT_SRC_COMMANDS_INIT_H
+#define BULLSHIT_SRC_COMMANDS_INIT_H
 
 namespace commands {
 
@@ -9,6 +7,4 @@ int Init();
 
 } // namespace commands
 
-} // namespace bs
-
-#endif // ifndef _BULLSHIT_SRC_COMMANDS_INIT_H
+#endif // ifndef BULLSHIT_SRC_COMMANDS_INIT_H

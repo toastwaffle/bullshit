@@ -59,9 +59,9 @@ int main(int argc, char* argv[]) {
   }
   const std::string_view command = argv[1];
   if (command == "init") {
-    return bs::commands::Init();
+    return commands::Init();
   } else if (command == "status") {
-    return bs::commands::Status();
+    return commands::Status();
   } else {
     std::cerr << "Unrecognised command " << std::quoted(command) << ".\n";
     return EXIT_FAILURE;
