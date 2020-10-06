@@ -9,6 +9,7 @@ all: $(patsubst %, bin/%, ${BINARIES})
 
 BS_DEPS =  \
 	bs.pb  \
+	crypto  \
 	bs
 bin/bs: $(patsubst %, build/%.o, ${BS_DEPS})
 

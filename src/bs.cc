@@ -1,4 +1,5 @@
 #include "bs.pb.h"
+#include "crypto.h"
 
 #include <filesystem>
 #include <iomanip>
@@ -80,6 +81,10 @@ int main(int argc, char* argv[]) {
   } else if (command == "status") {
     fs::path root = RepositoryRoot();
     std::cout << "Inside repository rooted at " << root << ".\n";
+  } else if (command == "demo_hash") {
+    if (argc != 3) std::exit(1);
+    std::cout << "sha256(" << std::quoted(argv[2]) << "): " << bs::hash(argv[2])
+              << '\n';
   } else {
     std::cerr << "Unrecognised command " << std::quoted(command) << ".\n";
     return EXIT_FAILURE;
