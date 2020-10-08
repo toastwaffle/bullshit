@@ -2,6 +2,50 @@ syntax = "proto2";
 
 package bs;
 
-message demo {
-  optional string text = 1;
+message FileEntry {
+  // Path of the file relative to the repository root.
+  optional string path = 1;
+  // POSIX permission bits for the file.
+  optional uint32 permissions = 2;
+  // Hash of the file contents.
+  optional bytes object = 3;
+}
+
+message NodeReference {
+  // Commit object that contains the definition for the referenced node.
+  optional bytes commit = 1;
+  // Hash of the node that is being referenced.
+  optional bytes hash = 2;
+}
+
+message Branch {
+  oneof branch {
+    // The branch directly represents another Node object.
+    Node node = 1;
+    // The branch references a Node within a different commit.
+    NodeReference reference = 2;
+  }
+}
+
+message Node {
+  // Information about a single file in the repository.
+  optional FileEntry file = 1;
+  // Information about files with paths that are lexicographically before the
+  // file in this node.
+  optional Branch left = 2;
+  // Information about files with paths that are lexicographically after the
+  // file in this node.
+  optional Branch right = 3;
+}
+
+message Commit {
+  // Object hashes for each parent commit. Initial commits have no parents,
+  // while merge commits have at least two. Most other commits have one parent.
+  repeated bytes parent_commits = 1;
+  // Creation time of this commit, represented as a unix timestamp in seconds.
+  optional int64 creation_time = 2;
+  // Description of this commit.
+  optional string description = 3;
+  // Binary tree representing the repository state at this commit.
+  optional Node files = 4;
 }
